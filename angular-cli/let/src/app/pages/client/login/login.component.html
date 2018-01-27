@@ -1,0 +1,33 @@
+<div class="bg" style="background:#43A047 ; height:300px; position:static"></div>
+<div class="row" style="position: relative; top: -130px;">
+
+   <div class="col-md-12">
+      <div class="login-page" [@growAnimate]="">
+         <div class="" style="text-align:center; padding:40px 40px 20px 40px">
+            <h3 class="login-welcome-title">&#8212; Welcome to &#8212;</h3>
+            <h1 class="app-title">{{ appTitle }}</h1>
+         </div>
+         <div class="form">
+            <form novalidate [formGroup]="userLoginForm" (ngSubmit)="onLogin()">
+               <div class="form-group">
+                  <input type="text" id="username" formControlName="username" placeholder="username" autocomplete="off" autofocus />
+                  <div *ngIf="usernameErrorMsg" class="errors">
+                     {{ usernameErrorMsg }}
+                  </div>
+               </div>
+               <div class="form-group">
+                  <input id="password" formControlName="password" type="password" placeholder="password" autocomplete="off" />
+                  <div *ngIf="usernameErrorMsg" class="errors">
+                     {{ passwordErrorMsg }}
+                  </div>
+               </div>
+               <button id="btn-login" name="btn-login" class="btn btn-warning" type="submit" [disabled]="!userLoginForm.valid">Login</button>
+
+               <p class="message"><a routerLink="/forgot-password">Forgot Password?</a> | <a routerLink="/register">Register</a></p>
+            </form>
+            <div style="margin-top:5px;" *ngIf="errorMessage" [@growAnimate]="" class="errors"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{ errorMessage }}</div>
+         </div>
+      </div>
+   </div>
+
+</div>

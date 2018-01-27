@@ -1,0 +1,11 @@
+<div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+  <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+  <input id="global-filter" #searchinput type="text" pInputText size="50" placeholder="Search">
+</div>
+
+<p-dataTable [loading]="loading" loadingIcon="fa-spinner" dataKey="guid" [(selection)]="selectedRows" [value]="data" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" (onHeaderCheckboxToggle)="onToggleAllRowsSelect($event)" resizableColumns="true"
+  [rows]="iRowCount" [paginator]="true" [globalFilter]="searchinput" #dt>
+  <p-column *ngIf="multiple" styleClass="vertAlign" selectionMode="multiple"></p-column>
+  <p-column styleClass="vertAlign" *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{ 'width': col.style.width, 'text-align': col.style.textalign }"></p-column>
+
+</p-dataTable>

@@ -1,0 +1,68 @@
+<app-dashboard-header></app-dashboard-header>
+
+<div class="container">
+   <div class="row row-offcanvas row-offcanvas-left">
+      <div class="col-xs-3 col-sm-2 sidebar-offcanvas" id="sidebar">
+         <app-sidenav></app-sidenav>
+      </div>
+
+      <!--/.sidebar-offcanvas-->
+      <div class="col-xs-12 col-sm-10">
+
+         <div class="col-md-12 content-area">
+            <p id="btn-offcanvas-container" class="pull-left visible-xs">
+               <button id="btn-offcanvas" type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+            </p>
+
+            <p-growl [(value)]="msgs" [immutable]="false" life="2000"></p-growl>
+            <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+            <div class="row" style="margin-top:10px;">
+               <div class="col-md-12 btn-nav">
+                  <button type="button" (click)="addMajoring()" class="btn btn-md btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+                  <button type="button" (click)="editMajoring()" class="btn btn-md btn-default" [disabled]="isEditDisabled"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                  <button type="button" (click)="onRefresh()" class="btn btn-md btn-default"><i class="fa fa-refresh" aria-hidden="true"></i> Refresh</button>
+                  <button type="button" (click)="onDelete()" class="btn btn-md btn-danger" [disabled]="isDeleteDisabled"><i class="fa fa-ban" aria-hidden="true"></i> Delete</button>
+               </div>
+            </div>
+            <hr/>
+
+            <div *ngIf="majorings" [@growSlowly]="">
+               <app-datatable #tblMajoring [iRowCount]="7" (evtRowSelection)="handleRowSelect($event)" (evtAllSelections)="handleAllSelection($event)" [data]="majorings"
+                  [cols]="cols"></app-datatable>
+            </div>
+
+            <p-dialog [header]="dialogTitle" [(visible)]="display" modal="modal" width="600" [responsive]="true">
+               <div class="row" style="margin-bottom:20px;">
+                  <div class="col-md-12">
+                     <form #majoringForm="ngForm" (ngSubmit)="onCreateUpdateMajoring(majoringForm)">
+                        <input type="hidden" class="form-control" id="guid" name="guid" [(ngModel)]="guid">
+                        <div class="form-group">
+                           <label class="control-label" for="majoring">Category:</label>
+                           <select class="form-control" id="category_id" name="category_id" placeholder="Majoring" [(ngModel)]="category_id" required>
+                              <option value="" disabled selected>Select Category</option>
+                           <option *ngFor="let category of categories" value="{{ category.id }}" >{{ category.name }}</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="name">Name</label>
+                           <input type="text" class="form-control" id="name" name="name" [(ngModel)]="name" placeholder="Name" autocomplete="false"
+                              required>
+                        </div>
+                        <div class="form-group">
+                           <label for="description">Description</label>
+                           <textarea type="text" class="form-control" id="description" name="description" [(ngModel)]="description" placeholder="Description"
+                              rows="5"></textarea>
+                        </div>
+                        <hr/>
+                        <button type="submit" [disabled]="!majoringForm.valid" class="btn btn-sm btn-success" label="Yes"><i class="fa fa-floppy-o" aria-hidden="true"></i> {{ btnAction }}</button>
+                        <button type="button" class="btn btn-sm btn-default" (click)="display=false" label="No">Close</button>
+                     </form>
+                  </div>
+               </div>
+            </p-dialog>
+
+
+         </div>
+      </div>
+   </div>

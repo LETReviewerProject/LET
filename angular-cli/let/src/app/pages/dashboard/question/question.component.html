@@ -1,0 +1,119 @@
+<app-dashboard-header></app-dashboard-header>
+
+<div class="container">
+  <div class="row row-offcanvas row-offcanvas-left">
+    <div class="col-xs-3 col-sm-2 sidebar-offcanvas" id="sidebar">
+      <app-sidenav></app-sidenav>
+    </div>
+
+    <!--/.sidebar-offcanvas-->
+    <div class="col-xs-12 col-sm-10 col-md-10">
+
+      <div class="col-md-12 content-area">
+        <p id="btn-offcanvas-container" class="pull-left visible-xs">
+          <button id="btn-offcanvas" type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">
+                  <i class="fa fa-caret-right" aria-hidden="true"></i>
+               </button>
+        </p>
+
+        <p-growl [(value)]="msgs" [immutable]="false" life="2000"></p-growl>
+        <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+        <div class="row" style="margin-top:10px;">
+          <div class="col-md-12 btn-nav">
+            <button type="button" (click)="addQuestion()" class="btn btn-md btn-success">
+                     <i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+            <button type="button" (click)="editQuestion()" class="btn btn-md btn-default" [disabled]="isEditDisabled">
+                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+            <button type="button" (click)="onRefresh()" class="btn btn-md btn-default">
+                     <i class="fa fa-refresh" aria-hidden="true"></i> Refresh</button>
+            <button type="button" (click)="onDelete()" class="btn btn-md btn-danger" [disabled]="isDeleteDisabled">
+                     <i class="fa fa-ban" aria-hidden="true"></i> Delete</button>
+          </div>
+        </div>
+        <hr/>
+
+
+        <div [@growSlowly]="">
+          <app-datatable #tblQuestion (evtRowSelection)="handleRowSelect($event)" (evtAllSelections)="handleAllSelection($event)" [data]="questions" [cols]="cols"></app-datatable>
+        </div>
+
+        <p-dialog [header]="dialogTitle" [(visible)]="display" modal="modal" width="600" [responsive]="true">
+          <div class="row">
+
+            <form #questionForm="ngForm" (ngSubmit)="onCreateUpdateQuestion(questionForm)">
+              <input type="hidden" class="form-control" id="guid" name="guid" [(ngModel)]="guid">
+              <div class="form-group col-md-12">
+                <label for="name">Category/Majoring</label>
+
+                <div class="input-group dropdown">
+                  <input name="categoryMajoringId" type="text" class="form-control categoryMajoring dropdown-toggle" [(ngModel)]="categoryMajoring" autocomplete="off" required>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-header">Category</li>
+                    <li *ngFor="let category of categories" style="padding-left:5px;">
+                      <a id="{{ category.id }}" class="category-majoring-selection" attr.ismajoring='0'>{{ category.name }}</a>
+                    </li>
+                    <li class="dropdown-header">Majoring</li>
+                    <li *ngFor="let majoring of majorings" style="padding-left:5px;">
+                      <a id="{{ majoring.id }}" class="category-majoring-selection" attr.ismajoring='1'>{{ majoring.name }}</a>
+                    </li>
+                  </ul>
+                  <span role="button" class="input-group-addon dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <span class="caret"></span>
+                  </span>
+                </div>
+              </div>
+
+              <div style="clear:both">
+                <hr/>
+              </div>
+
+              <div class="form-group col-md-12">
+                <label for="name">Question</label>
+                <textarea type="text" class="form-control" id="name" name="name" [(ngModel)]="name" placeholder="Name" autocomplete="off" rows="3"></textarea>
+              </div>
+
+              <div class="form-group col-md-12">
+                <label for="pts">Points</label>
+                <input type="text" class="form-control" id="pts" name="pts" [(ngModel)]="pts" min="0" maxlength="1" placeholder="Points Possible" autocomplete="off" style="width:150px;" required>
+              </div>
+
+              <div style="clear:both"></div>
+
+              <div class="col-md-12">
+                <hr/>
+                <div class="col-md-7" style="padding:0">
+                  <input type="text" class="form-control" id="inputoption" name="inputoption" [(ngModel)]="inputOption" placeholder="Add Option" autocomplete="off">
+                </div>
+                <div class="col-md-3">
+                  <button type="button" id="add-option" class="btn btn-sm btn-default">
+                              <i class="fa fa-plus-circle" aria-hidden="true"></i> Add Choices</button>
+                </div>
+                <div class="col-md-2" style="padding:0">
+                  <button type="button" id="clear-option" class="btn btn-sm btn-default" style="width:70px; min-width:70px;">
+                              <i class="fa fa-plus-circle" aria-hidden="true"></i> Clear</button>
+                </div>
+              </div>
+
+              <div style="clear:both">
+                <hr/>
+              </div>
+
+              <div id="option-container" name="option_container" class="col-md-12" style="margin-bottom:10px;"></div>
+
+              <div style="clear:both">
+                <hr/>
+              </div>
+
+              <div class="form-group col-md-12">
+                <button type="submit" (click)="onCollectAnswerOptions()" [disabled]="!questionForm.valid" class="btn btn-sm btn-success" label="Yes">
+                           <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ btnAction }}</button>
+                <button type="button" class="btn btn-sm btn-default" (click)="display=false" label="No">Close</button>
+              </div>
+            </form>
+          </div>
+        </p-dialog>
+
+      </div>
+    </div>
+  </div>

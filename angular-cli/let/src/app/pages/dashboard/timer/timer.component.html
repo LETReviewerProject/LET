@@ -1,0 +1,25 @@
+<app-dashboard-header></app-dashboard-header>
+<p-growl [(value)]="msgs" [immutable]="false" life="2000"></p-growl>
+
+<div class="container">
+   <div class="row row-offcanvas row-offcanvas-left">
+      <div class="col-xs-3 col-sm-2 sidebar-offcanvas" id="sidebar">
+         <app-sidenav></app-sidenav>
+      </div>
+
+      <div [@growSlowly]="" class="col-md-9" style="margin-top:20px;">
+         <hr/>
+         <form #timerForm="ngForm" (ngSubmit)="onSubmit(timerForm)">
+            <div class="form-group">
+               <label for="timer">Time Limit</label>
+               <input type="number" class="form-control" id="time_limit" name="time_limit" [(ngModel)]="time_limit"
+                  placeholder="By minutes" autocomplete="false" style="width:150px;" required>
+            </div>
+            <button type="submit" [disabled]="!timerForm.valid" class="btn btn-sm btn-success" label="Yes">{{ btnAction }}</button>
+
+         </form>
+      </div>
+
+
+   </div>
+</div>

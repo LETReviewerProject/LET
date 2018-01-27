@@ -1,0 +1,12 @@
+table.ui-datatable-thead tr th {
+   text-align: left;
+}
+
+app-category {
+   background: #fffdfd !important;
+}
+
+.container {
+   background: #FFF;
+   padding-top: 20px;
+}

@@ -1,0 +1,221 @@
+<app-dashboard-header></app-dashboard-header>
+
+<div class="container">
+  <div class="row row-offcanvas row-offcanvas-left">
+    <div class="col-xs-3 col-md-2 sidebar-offcanvas" id="sidebar">
+      <app-sidenav></app-sidenav>
+    </div>
+
+    <!--/.sidebar-offcanvas-->
+    <div class="col-xs-12 col-md-10">
+
+      <div class="col-md-12 content-area">
+        <p id="btn-offcanvas-container" class="pull-left visible-xs">
+          <button id="btn-offcanvas" type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">
+                  <i class="fa fa-caret-right" aria-hidden="true"></i>
+               </button>
+        </p>
+
+        <p-growl [(value)]="msgs" [immutable]="false" life="2000"></p-growl>
+        <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+        <div class="row" style="margin-top:10px;">
+          <div class="col-md-12 btn-nav">
+            <button type="button" (click)="onAddUser()" class="btn btn-md btn-success">
+                     <i class="fa fa-plus" aria-hidden="true"></i> Add User</button>
+            <button type="button" (click)="onRefresh()" class="btn btn-md btn-default">
+                     <i class="fa fa-refresh" aria-hidden="true"></i> Refresh</button>
+            <button type="button" (click)="onDelete()" class="btn btn-md btn-danger" [disabled]="isDeleteDisabled">
+                     <i class="fa fa-ban" aria-hidden="true"></i> Delete</button>
+          </div>
+        </div>
+        <hr/>
+
+        <div [@growSlowly]="">
+          <!-- <app-datatable #tblUser (evtRowSelection)="handleRowSelect($event)" (evtAllSelections)="handleAllSelection($event)" [data]="users" [cols]="cols"></app-datatable>
+         -->
+          <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+            <input id="global-filter" #searchinput type="text" pInputText size="50" placeholder="Search">
+          </div>
+
+          <p-dataTable [loading]="loading" loadingIcon="fa-spinner" [value]="users" resizableColumns="true" [rows]="10" [paginator]="true" [globalFilter]="searchinput">
+            <p-column styleClass="vertAlign" selectionMode="multiple"></p-column>
+            <p-column field="guid" styleClass="col-button" [style]="{'width':'25px', 'text-align': 'left'}">
+              <ng-template pTemplate="header">
+                ID
+              </ng-template>
+              <ng-template let-users="rowData" pTemplate="body">
+                {{users.guid}}
+              </ng-template>
+            </p-column>
+            <p-column field="username" header="Username" [style]="{'width':'50px', 'text-align': 'left'}"></p-column>
+            <p-column field="email" header="Email" [style]="{'width':'90px', 'text-align': 'left'}"></p-column>
+            <!-- <p-column field="status" header="Confirmed" [style]="{'width':'40px', 'text-align': 'center'}"></p-column> -->
+            <p-column field="status" styleClass="col-button" [style]="{'width':'40px', 'text-align': 'center'}">
+              <ng-template pTemplate="header">
+                Confirmed
+              </ng-template>
+              <ng-template let-users="rowData" pTemplate="body">
+                <div *ngIf="users.status === 1">
+                  <i class="fa fa-check"></i>
+                </div>
+                <div *ngIf="users.status === 0">
+                  <i class="fa fa-times"></i>
+                </div>
+              </ng-template>
+            </p-column>
+
+            <p-column field="isteacher" styleClass="col-button" [style]="{'width':'40px', 'text-align': 'center'}">
+              <ng-template pTemplate="header">
+                Teacher
+              </ng-template>
+              <ng-template let-users="rowData" pTemplate="body">
+                <div *ngIf="users.isteacher === 1">
+                  <i class="fa fa-check"></i>
+                </div>
+                <div *ngIf="users.isteacher === 0">
+                  <i class="fa fa-times"></i>
+                </div>
+              </ng-template>
+            </p-column>
+
+            <p-column field="url" styleClass="col-button" [style]="{'width':'50px', 'text-align': 'center'}">
+              <ng-template pTemplate="header">
+                Activate Reg.
+              </ng-template>
+              <ng-template let-users="rowData" pTemplate="body">
+                <button *ngIf="users.isactivated == 1" type="button" disabled class="btn btn-default">Activated</button>
+
+                <button *ngIf="users.isactivated == 0" type="button" (click)="activateRegistration(users, $event)" class="btn btn-success">Activate</button>
+              </ng-template>
+            </p-column>
+
+          </p-dataTable>
+
+        </div>
+
+        <p-dialog [header]="dialogTitle" [(visible)]="display" modal="modal" width="600" [responsive]="true">
+
+          <div class="form">
+            <form class="form-horizontal" role="form" [formGroup]="userRegistrationForm" (ngSubmit)="onRegister()">
+              <div class="form-group">
+                <label for="username" class="col-md-2 control-label">Username</label>
+                <div class="col-md-10">
+                  <input type="text" id="username" formControlName="username" placeholder="Username" class="form-control" autofocus>
+                  <div *ngIf="usernameErrorMsg" class="errors">
+                    {{ usernameErrorMsg }}
+                  </div>
+                </div>
+              </div>
+
+              <div formGroupName="passwordFormGroup">
+                <div class="form-group">
+                  <label for="password" class="col-sm-2 control-label">Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" id="password" formControlName="password" placeholder="password" class="form-control" autocomplete="false">
+
+                    <div *ngIf="passwordErrorMsg" class="errors">
+                      {{ passwordErrorMsg }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="confirmpassword" class="col-sm-2 control-label">Confirm Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" id="confirmpassword" formControlName="confirmpassword" placeholder="Confirm Password" class="form-control" autocomplete="false">
+
+                    <div *ngIf="confirmPasswordErrorMsg" class="errors">
+                      {{ confirmPasswordErrorMsg }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="form-group">
+                <label for="password" class="col-md-2 control-label">Password</label>
+                <div class="col-md-10">
+                  <input type="password" id="password" formControlName="password" placeholder="Password" class="form-control">
+                  <div *ngIf="passwordErrorMsg" class="errors">
+                    {{ passwordErrorMsg }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="confirm-password" class="col-md-2 control-label">Confirm Password</label>
+                <div class="col-md-10">
+                  <input type="password" id="confirm-password" formControlName="confirmpassword" placeholder="Confirm Password" class="form-control">
+                  <div *ngIf="confirmPasswordErrorMsg" class="errors">
+                    {{ confirmPasswordErrorMsg }}
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="form-group">
+                <div class="col-md-10 col-sm-offset-2">
+                  <p-checkbox id="isteacher" name="isteacher" formControlName="isteacher" binary="true"></p-checkbox>
+                  <label for="isteacher">Teacher</label>
+                </div>
+              </div>
+              <hr style="margin-bottom:20px;" />
+
+              <div class="form-group">
+                <label for="fullname" class="col-md-2 control-label">Fullname</label>
+                <div class="col-md-10">
+                  <input type="text" id="fullname" formControlName="fullname" placeholder="Full Name" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="email" class="col-md-2 control-label">Email</label>
+                <div class="col-md-10">
+                  <input type="email" id="email" formControlName="email" placeholder="Email" class="form-control">
+                  <div *ngIf="emailErrorMsg" class="errors">
+                    {{ emailErrorMsg }}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-2 control-label" for="majoring">Majoring:</label>
+                <div class="col-md-10">
+                  <select class="form-control" id="majoring" formControlName="majoring" placeholder="Majoring">
+                              <option value=""></option>
+                              <option *ngFor="let majoring of majorings" value="{{ majoring.id }}">{{ majoring.name }}</option>
+                           </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="school" class="col-md-2 control-label">School</label>
+                <div class="col-md-10">
+                  <input type="text" id="school" formControlName="school" placeholder="school" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="contact" class="col-md-2 control-label">Contact</label>
+                <div class="col-md-10">
+                  <input type="text" id="contact" formControlName="contact" placeholder="contact" class="form-control">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="address" class="col-md-2 control-label">Address</label>
+                <div class="col-md-10">
+                  <textarea type="text" class="form-control" formControlName="address" id="address" name="address" [(ngModel)]="address" placeholder="Address" rows="5"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-10 col-sm-offset-2">
+                  <button type="submit" [disabled]="!userRegistrationForm.valid" class="btn btn-sm btn-success" label="Yes">
+                              <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ btnAction }}</button>
+                  <button type="button" class="btn btn-sm btn-default" (click)="display=false" label="No">Close</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </p-dialog>
+
+      </div>
+    </div>
+  </div>

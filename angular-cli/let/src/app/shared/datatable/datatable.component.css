@@ -1,0 +1,8 @@
+table.ui-datatable-thead tr th {
+   text-align: left;
+}
+
+.ui-datatable {
+   transition: 0.5s ease all;
+}
+

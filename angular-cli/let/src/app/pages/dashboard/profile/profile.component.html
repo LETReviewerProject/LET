@@ -1,0 +1,158 @@
+<app-client-header [myTitle]="screenTitle"></app-client-header>
+<p-growl [(value)]="msgs" [immutable]="false" life="2000"></p-growl>
+
+<div class="row detail-top-container">
+  <div class="container" style="max-width:1050px;">
+    <div class="col-md-2" style="text-align:center">
+      <img src="{{ profile.image == 'assets/images/pp.jpg' ? '' : apiProfileImageUrl + profile.image }}" alt="Profile Image" class="img-circle profile-picture">
+      <div style="margin-top:10px;">
+        <button *ngIf="isBtnBack" routerLink="/dashboard/categories" class="btn btn-link">
+           <i class="fa fa-arrow-left" aria-hidden="true"></i> Go Back</button>
+        <button (click)="editProfile()" class="btn btn-link">
+           <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+      </div>
+    </div>
+
+    <div class="col-md-9" style="padding:0 20px 0 0;">
+      <table class="table no-border" style="margin-bottom: 0;">
+        <tbody>
+          <tr>
+            <td>
+              <tr>
+                <td style="vertical-align: bottom" class="lbl-row">Fullname :</td>
+                <td style="vertical-align: bottom">{{ profile.fullname }}</td>
+              </tr>
+              <tr>
+                <td style="vertical-align: bottom" class="lbl-row">Username :</td>
+                <td style="vertical-align: bottom">{{ profile.username }}</td>
+              </tr>
+              <tr>
+                <td class="lbl-row">Email :</td>
+                <td>{{ profile.email }}</td>
+              </tr>
+              <tr *ngIf="isTeacher == 0 && isAdmin == 0">
+                <td class="lbl-row">School :</td>
+                <td>{{ profile.school }}</td>
+              </tr>
+            </td>
+            <td>
+              <tr *ngIf="isTeacher == 1 && isAdmin == 0 ">
+                <td class="lbl-row">Majoring :</td>
+                <td>{{ profile.majoring }}</td>
+              </tr>
+              <tr>
+                <td class="lbl-row">Contact :</td>
+                <td>{{ profile.contact }}</td>
+              </tr>
+              <tr>
+                <td class="lbl-row">Address :</td>
+                <td>{{ profile.address }}</td>
+              </tr>
+            </td>
+          </tr>
+          <tr><p style="color:#999"><small>Note: After uploading profile image, reflect the page to see changes.</small></p></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="container down-gradient" style="max-width:1050px; padding-top:10px; border-radius:5px">
+    <div class="clearfix"></div>
+
+    <div *ngIf="isTeacher == 1 && isAdmin === 0" class="col-md-12">
+      <h4>Students</h4>
+      <div [@growSlowly]="">
+
+        <div class="ui-widget-header" style="padding:4px 10px;border-bottom: 0 none">
+          <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+          <input id="global-filter" #searchinput type="text" pInputText size="50" placeholder="Search">
+        </div>
+
+        <p-dataTable [loading]="loading" loadingIcon="fa-spinner" [value]="results" resizableColumns="true" [rows]="10" [paginator]="true" [globalFilter]="searchinput">
+          <!-- <p-column field="guid" header="ID" [style]="{'width':'5px', 'text-align': 'center'}"></p-column> -->
+          <p-column field="guid" styleClass="col-button" [style]="{'width':'5px', 'text-align': 'center'}">
+            <ng-template pTemplate="header">
+              ID
+            </ng-template>
+            <ng-template let-Results="rowData" pTemplate="body">
+              <i class="fa fa-user-circle-o" aria-hidden="true"></i> {{Results.guid}}
+            </ng-template>
+          </p-column>
+          <p-column field="studentname" header="Student" [style]="{'width':'90px', 'text-align': 'left'}"></p-column>
+          <p-column field="url" styleClass="col-button" [style]="{'width':'40px', 'text-align': 'center'}">
+            <ng-template pTemplate="header">
+              Exam History
+            </ng-template>
+            <ng-template let-Results="rowData.url" pTemplate="body">
+              <button type="button" pButton (click)="onGotoDetail(Results)" icon="fa-search"></button>
+            </ng-template>
+          </p-column>
+        </p-dataTable>
+      </div>
+    </div>
+
+    <div *ngIf="isTeacher == 0 && isAdmin === 0" class="col-md-12" [@growSlowly]="">
+      <h4>Exam History</h4>
+      <app-datatable [data]="results" [isMultiple]="false" [iRowCount]="5" [cols]="cols"></app-datatable>
+    </div>
+
+  </div>
+
+  <p-dialog [header]="dialogTitle" [(visible)]="display" modal="modal" width="600" [responsive]="true">
+    <div class="row" style="margin-bottom:20px;">
+      <div class="col-md-12">
+        <form #updateProfileForm="ngForm" (ngSubmit)="onUpdateProfile(updateProfileForm)">
+          <input type="hidden" class="form-control" id="guid" name="guid" [(ngModel)]="profile.guid">
+          <input type="hidden" class="form-control" id="isteacher" name="isteacher" [(ngModel)]="profile.isteacher">
+
+          <div class="form-group col-md-12">
+            <label for="photo">Upload Profile Image</label>
+            <input #selectedphoto id="photo" type="file" name="photo" ng2FileSelect [uploader]="uploader" />
+            <hr/>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" [(ngModel)]="profile.username" placeholder="Username" autocomplete="false" required>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="fullname">Fullname</label>
+            <input type="text" class="form-control" id="fullname" name="fullname" [(ngModel)]="profile.fullname" placeholder="Fullname" autocomplete="false" required>
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" name="email" [(ngModel)]="profile.email" placeholder="Fullname" autocomplete="false" required>
+          </div>
+
+          <div *ngIf="isAdmin != 0" class="form-group col-md-6">
+            <label for="school">School</label>
+            <input type="text" class="form-control" id="school" name="school" [(ngModel)]="profile.school" placeholder="School" autocomplete="false">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="contact">Contact</label>
+            <input type="text" class="form-control" id="contact" name="contact" [(ngModel)]="profile.contact" placeholder="Contact" autocomplete="false" required>
+          </div>
+
+          <div class="form-group col-md-12">
+            <label for="address">Address</label>
+            <textarea type="text" class="form-control" id="address" name="address" [(ngModel)]="profile.address" placeholder="Address" rows="5"></textarea>
+          </div>
+
+          <hr/>
+
+          <div class="form-group col-md-12">
+            <button type="submit" [disabled]="!updateProfileForm.valid" class="btn btn-sm btn-success" label="Yes">
+                     <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ btnUpdateText }}</button>
+            <button type="button" class="btn btn-sm btn-default" (click)="display=false" label="No">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </p-dialog>
+
+</div>

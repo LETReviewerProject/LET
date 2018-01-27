@@ -1,0 +1,29 @@
+<p-growl [(value)]="msgs" [immutable]="false" life="3000"></p-growl>
+
+<div class="row">
+   <div class="col-md-6 col-md-offset-3" style="padding-top:50px; text-align:center">
+
+      <!-- <div class="alert alert-success" role="alert">
+            <h1><i class="fa fa-check" aria-hidden="true"></i> Account Activated!</h1>
+            <p>Congratulations. Your account has been activated.</p>
+         </div>
+         <p>Login to <a href="/login">{{ url }}</a></p> -->
+      <hr />
+      <div class="row" style="margin-bottom:40px">
+         <form #confirmationForm="ngForm" (ngSubmit)="onActivate(confirmationForm.value)">
+            <h1>Just one more step..</h1>
+            <p>Click the button below to activate your account</p>
+            <button type="submit" *ngIf="!isActivated" class="btn btn-lg btn-success">{{ btnActivateText }}</button>
+
+            <button *ngIf="isActivated" routerLink="/login" class="btn btn-lg btn-warning">Go to Login</button>
+
+         </form>
+      </div>
+      <div style="clear:both"></div>
+      <hr />
+      <div class="row">
+         <p class="gray-font">© 2017 LET Online Reviewer. All rights reserved</p>
+      </div>
+
+   </div>
+</div>

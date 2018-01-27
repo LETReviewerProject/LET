@@ -1,0 +1,7 @@
+<div *ngIf="dashboard1" class="list-group list1">
+    <a *ngFor="let menu of dashboard1" [routerLink]="menu.path" class="list-group-item"><i class="{{ menu.icon }}" aria-hidden="true"></i>{{ menu.title }}</a>
+</div>
+
+<div *ngIf="dashboard2" class="list-group list2">
+    <a *ngFor="let menu2 of dashboard2" [routerLink]="menu2.path" [hidden]="!myVar" class="list-group-item"><i class="{{ menu2.icon }}" aria-hidden="true"></i>{{ menu2.title }}</a>
+</div>

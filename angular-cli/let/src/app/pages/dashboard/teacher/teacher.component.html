@@ -1,0 +1,83 @@
+<app-dashboard-header></app-dashboard-header>
+
+<div class="container">
+   <div class="row row-offcanvas row-offcanvas-left">
+      <div class="col-xs-3 col-sm-2 sidebar-offcanvas" id="sidebar">
+         <app-sidenav></app-sidenav>
+      </div>
+
+      <!--/.sidebar-offcanvas-->
+      <div class="col-xs-12 col-sm-10">
+
+         <div class="col-md-12 content-area">
+            <p id="btn-offcanvas-container" class="pull-left visible-xs">
+               <button id="btn-offcanvas" type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">
+                  <i class="fa fa-caret-right" aria-hidden="true"></i>
+               </button>
+            </p>
+            <router-outlet></router-outlet>
+
+            <p-growl [(value)]="msgs" [immutable]="false" life="2000"></p-growl>
+            <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+            <div class="row" style="margin-top:10px;">
+               <div class="col-md-12 btn-nav">
+                  <!-- <button type="button" (click)="addTeacher()" class="btn btn-md btn-success"><i class="fa fa-plus" aria-hidden="true"></i> Add</button> -->
+                  <button type="button" (click)="editTeacher()" class="btn btn-md btn-default" [disabled]="isEditDisabled">
+                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                  <button type="button" (click)="onRefresh()" class="btn btn-md btn-default">
+                     <i class="fa fa-refresh" aria-hidden="true"></i> Refresh</button>
+                  <button type="button" (click)="onDelete()" class="btn btn-md btn-danger" [disabled]="isDeleteDisabled">
+                     <i class="fa fa-ban" aria-hidden="true"></i> Delete</button>
+               </div>
+            </div>
+            <hr/>
+
+            <div [@growSlowly]="">
+               <app-datatable #tblTeacher (evtRowSelection)="handleRowSelect($event)" (evtAllSelections)="handleAllSelection($event)" [data]="teachers"
+                  [cols]="cols"></app-datatable>
+            </div>
+
+            <p-dialog [header]="dialogTitle" [(visible)]="display" modal="modal" width="600" [responsive]="true">
+               <div class="row" style="margin-bottom:20px;">
+                  <div class="col-md-12">
+                     <form #worksheetForm="ngForm" (ngSubmit)="onCreateUpdateTeacher(worksheetForm)">
+                        <input type="hidden" class="form-control" id="guid" name="guid" [(ngModel)]="guid">
+                        <div class="form-group">
+                           <label for="name">Teacher Name</label>
+                           <input type="text" class="form-control" id="fullname" name="fullname" [(ngModel)]="fullname" placeholder="Name" autocomplete="false"
+                              required>
+                        </div>
+                        <div class="form-group">
+                           <label for="majoring_id">Majoring:</label>
+                           <select class="form-control" id="ismajoring" name="majoring_id" [(ngModel)]="majoring_id" placeholder="Majoring">
+                              <option value=""></option>
+                              <option *ngFor="let majoring of majorings" value="{{ majoring.id }}">{{ majoring.name }}</option>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                           <label for="name">Contact</label>
+                           <input type="text" class="form-control" id="contact" name="contact" [(ngModel)]="contact" placeholder="Contact" autocomplete="false"
+                              required>
+                        </div>
+                        <div class="form-group">
+                           <label for="name">Email</label>
+                           <input type="email" class="form-control" id="email" name="email" [(ngModel)]="email" placeholder="Email" autocomplete="false"
+                              required>
+                        </div>
+                        <div class="form-group">
+                           <label for="address">Address</label>
+                           <textarea type="text" class="form-control" id="address" name="address" [(ngModel)]="address" placeholder="Address" rows="5"></textarea>
+                        </div>
+                        <hr/>
+                        <button type="submit" [disabled]="!worksheetForm.valid" class="btn btn-sm btn-success" label="Yes">
+                           <i class="fa fa-floppy-o" aria-hidden="true"></i> {{ btnAction }}</button>
+                        <button type="button" class="btn btn-sm btn-default" (click)="display=false" label="No">Close</button>
+                     </form>
+                  </div>
+               </div>
+            </p-dialog>
+
+         </div>
+      </div>
+   </div>

@@ -1,0 +1,32 @@
+<app-client-header></app-client-header>
+<p-growl [(value)]="msgs" [immutable]="false" life="2000"></p-growl>
+
+<div class="row">
+   <div [@slideFromRight] class="container down-gradient" style="border-radius:5px">
+
+      <div class="col-md-12">
+         <div class="col-md-6">
+            <h3 class="pull-left" style="margin-top:10px"><i class="fa fa-user-circle-o" style="font-size:30px;" aria-hidden="true"></i> {{ profile.fullname }}</h3>
+         </div>
+         <div class="col-md-6" style="margin-top:10px">
+            <button id="btn-back" name="btn-back" class="btn btn-md btn-default pull-right" routerLink="/profile" type="button">
+               <i class="fa fa-angle-left" aria-hidden="true"></i> Back</button>
+         </div>
+      </div>
+
+      <div class="clearfix"></div>
+      <hr />
+
+      <div class="col-md-12">
+         <div [@growSlowly]="">
+            <app-datatable [data]="results" [iRowCount]="5" [cols]="cols"></app-datatable>
+         </div>
+      </div>
+      <div class="col-md-12" style="margin-top:20px;">
+         <button id="btn-back" name="btn-back" class="btn btn-md btn-default" routerLink="/profile" type="button">
+            <i class="fa fa-angle-left" aria-hidden="true"></i> Back</button>
+      </div>
+   </div>
+
+
+</div>

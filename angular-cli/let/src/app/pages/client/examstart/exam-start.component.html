@@ -1,0 +1,71 @@
+<app-client-header></app-client-header>
+
+<p-growl [(value)]="msgs" [immutable]="false" life="3000"></p-growl>
+<p-blockUI [blocked]="blocked" [target]="pnl"></p-blockUI>
+
+<div *ngIf="tabCategories && questionArr && answers" [@growSlowly]="" class="container exam-wrapper">
+  <form #examForm="ngForm" (ngSubmit)="onSubmit(examForm.value)">
+    <ul #myTabs id="exam-start-tabs" (click)="onChangeTab($event)" class="nav nav-tabs">
+      <li *ngFor="let tab of tabCategories; let i = index" [class.active]="i == 0" role="presentation">
+        <a id="{{ tab.id }}" attr.timer="{{tab.timer}}" href="#tab{{ tab.id }}" data-toggle="tab">
+               {{ tab.ismajoring == '1' ? 'Majoring - ' + tab.name: tab.name }}
+            </a>
+      </li>
+      <li role="presentation" class="pull-right">
+        Timer:
+        <span class="label label-danger countdown" style="font-size:20px;">{{ timeLimit }}</span>
+      </li>
+    </ul>
+
+    <div #pnl id="exam-container" class="tab-content">
+      <div *ngFor="let tab of tabCategories; let i = index" id="tab{{ tab.id }}" class="tab-pane fade in " [class.active]="i == 0">
+        <div *ngFor="let question of questionArr; let y = index" [@growSlowly]="">
+          <div *ngIf="tab.name == question.category_majoring" class="question-container">
+            <h4 id="{{ question.id }}" class="col-md-12">{{ question.idx + '. ' + question.name }}</h4>
+
+            <div class="answer-container col-md-12">
+              <div *ngFor="let answer of answers" [@growSlowly]="">
+                <div *ngIf="answer.question_id == question.id" class="col-xs-12 col-sm-5 col-md-5">
+                  <input type="radio" attr.catid="{{ tab.id }}" id="answer-option-{{ answer.id }}" name="answer-option-{{ question.id }}" selectedanswer="" attr.answername="{{ answer.name }}" attr.answerid="{{ answer.id }}" class="exam-options">
+                  <label id="lbl-answer-option-{{ answer.id }}" class="label-option" for="answer-option-{{ answer.id }}">{{ answer.name }}</label>
+                </div>
+              </div>
+            </div>
+
+            <div style="clear:both"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- [disabled]="!isEnable" -->
+    <div class="col-md-12" style="text-align: center">
+      <button *ngIf="!isSubmitted; else alreadysubmitted" id="btn-submit" name="btn-submit" class="btn btn-lg btn-success" type="submit">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i> {{ btnSubmitText }}
+         </button>
+    </div>
+
+    <ng-template #alreadysubmitted>
+      <button name="btn-submit" class="btn btn-lg btn-warning disabled" type="submit">
+        <i class="fa fa-paper-plane" aria-hidden="true"></i> Submitted
+     </button>
+    </ng-template>
+
+    <div id="myModal" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Your time ended.</h4>
+          </div>
+          <div class="modal-body">
+            <h4 style="color:green">
+              <i class="fa fa-clock-o" aria-hidden="true"></i> Please confirm to proceed to results page.</h4>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-warning" (click)="onConfirm()" type="submit">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,45 @@
+<app-client-header></app-client-header>
+<p-growl [(value)]="msgs" [immutable]="false" life="3000"></p-growl>
+
+<div class="container">
+  <div id="exam-overview-panel" class="panel panel-primary one-edge-shadow">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+      <ul class="list-inline" style="margin-bottom:0">
+        <li>
+          <h4>{{ examOverview }}</h4>
+        </li>
+      </ul>
+    </div>
+    <div id="exam-list" class="panel-body">
+      <div [@growSlowly]="" *ngFor="let category of categories; let i = index" attr.guid="{{category.guid}}" attr.timer="{{category.timer}}" id="{{category.id}}" class="col-md-12 image-object-container" (click)="toggleHighlight($event, i)"
+        [ngClass]="{'hl-image-object-container': highlightedDiv === i }" pTooltip="Click to Select" life="1000" tooltipPosition="left">
+        <div class=" col-md-2 image-object{{ i + 1 }} ">{{ category.name }}</div>
+        <div class="col-md-9 ">
+          <div class="col-md-12 ">
+            <h2 *ngIf="category.ismajoring=='1' ">Majoring</h2>
+            <h4 style="margin:0 ">Timer: {{ category.timer }} minutes</h4>
+          </div>
+
+          <div class="clear-fix"></div>
+
+          <div class=" col-md-12 ">
+            <hr *ngIf="category.rows && category.rows.length > 0" />
+            <br *ngIf="category.rows && category.rows.length < 1" />
+
+            <p style="font-size:14px;">{{ category.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clear-fix">
+      <hr/>
+    </div>
+
+    <div class="col-md-12" style="text-align:center; margin-top:20px">
+      <button (click)="onBeginExam()" id="btn-start" name="btn-start" class="btn btn-lg btn-success" type="button">
+            <i class="fa fa-hand-pointer-o" aria-hidden="true"></i> Begin Exam</button>
+    </div>
+  </div>
+</div>

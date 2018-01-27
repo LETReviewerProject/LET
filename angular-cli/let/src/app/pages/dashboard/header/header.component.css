@@ -1,0 +1,95 @@
+ /* bootstrap customization */
+ .navbar {
+  margin-bottom: 0;
+  background: #333 !important;
+  color:#FFF;
+}
+
+.navbar-toggle .icon-bar {
+   background: #999 !important;
+}
+
+.navbar-brand {
+   color:#fafafa;
+   font-size:21px !important;
+}
+
+.dropdown a:link {
+   text-decoration: none !important;
+}
+
+.dropdown a:visited {
+   text-decoration: none !important;
+}
+
+.dropdown a:active {
+   text-decoration: none !important;
+}
+
+a.dropdown-toggle {
+  color:#FFF !important;
+}
+
+.dropdown a:hover {
+  text-decoration: none !important;
+  background: #666 !important;
+}
+
+.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+  background: #333 !important;
+}
+
+.dropdown-menu>li>a:hover {
+  color:#FFF !important;
+}
+
+ /* end bootstrap customization */
+
+.profile-picture {
+   height:40px;
+   width:40px;
+}
+
+.watermark {
+  font-size: 8px;
+  color:#eee;
+}
+
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575px) { 
+   .navbar-nav {
+      float:left
+   }
+   .btn-nav button {
+      width:60px;
+   }
+}
+ 
+/* Small devices (landscape phones, 576px and up) */
+ @media (min-width: 576px) and (max-width: 767px) { 
+   .navbar-nav {
+      float:right !important
+   }
+  }
+ 
+/* Medium devices (tablets, 768px and up) */
+ @media (min-width: 768px) and (max-width: 991px) { 
+   .navbar-nav {
+      float:right !important
+   }
+  }
+ 
+/* Large devices (desktops, 992px and up) */
+ @media (min-width: 992px) and (max-width: 1199px) { 
+   .navbar-nav {
+      float:right !important
+   }
+  }
+ 
+/* Extra large devices (large desktops, 1200px and up) */
+ @media (min-width: 1200px) { 
+   .navbar-nav {
+      float:right !important
+   }
+  }

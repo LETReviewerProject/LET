@@ -1,0 +1,28 @@
+.list-group a:hover:not(.active) {
+    background: #f9f9f9;
+    color: #000;
+}
+
+.fa {
+    padding-right: 5px;
+    font-size: 18px;
+}
+
+.list-group a {
+    border: none;
+    font-size: 15px;
+    font-family: roboto;
+    margin: 2px;
+    text-shadow: none !important;
+    color: #444;
+    padding-right: 2px;
+    white-space: nowrap;
+    background: #f9f9f9;
+}
+
+.list-group .active {
+    color: #FFF;
+    background: #428bca;
+    border-radius: 2px;
+    font-weight: 400;
+}

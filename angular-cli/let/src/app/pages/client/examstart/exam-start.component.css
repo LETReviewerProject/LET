@@ -1,0 +1,82 @@
+#exam-start-tabs li {
+   cursor: pointer;
+}
+
+.tab-content  {
+   border-left: thin #CCC solid !important;
+   border-right: thin #CCC solid !important;
+   border-bottom: thin #CCC solid !important;
+}
+
+.exam-wrapper{ 
+   margin-top: 30px !important;
+}
+
+h4 {
+   color: #333 !important;
+}
+
+.nav-tabs {
+   margin-bottom: 20px !important;
+}
+
+label {
+   font-weight: normal !important;
+   font-size: 14px;
+   width: 90%;
+   text-transform: lowercase;
+   white-space: normal;
+}
+
+label::first-letter {
+   text-transform: uppercase;
+}
+
+input[type="radio"]:checked+label {
+   font-weight: bold !important;
+   color: #111 !important;
+   text-decoration: underline;
+}
+
+.exam-wrapper {
+   height: calc(100vh - 250px);
+   min-height: calc(100vh - 250px);
+}
+
+#exam-container {
+   height: calc(100vh - 250px);
+   min-height: calc(100vh - 250px);
+   overflow-y: scroll;
+   border-left: thin #CCC solid;
+   position: relative;
+   top: -20px;
+   padding: 20px;
+}
+
+.answer-container {
+   min-height: 60px;
+}
+
+.question-container {
+   padding: 10px;
+   background: #f7f7f7 !important;
+   border-bottom:thin #f1f1f1 solid !important;
+   border-radius: 4px;
+   margin-bottom:4px;
+   transition: 0.2s ease all;
+   min-height:100px;
+}
+
+.question-container:last-child {
+   border: none;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+   background: #337ab7;
+   color: #FFF;
+   border: thin #337ab7 solid;
+}
+
+#btn-submit {
+   text-align: center;
+}

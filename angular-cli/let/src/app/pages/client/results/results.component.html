@@ -1,0 +1,103 @@
+<app-client-header></app-client-header>
+
+<p-blockUI [blocked]="blocked" [target]="pnl">
+</p-blockUI>
+
+<div *ngIf="tabCategories && questions" [@growSlowly]="" class="container">
+  <div class="col-md-12">
+    <div class="col-md-6" style="height:70px; padding-left: 0;">
+      <h2>Exam Results</h2>
+    </div>
+    <div class="col-md-6" style="text-align: right; height:70px; padding-right: 0;">
+      <h2 class="roboto-font">
+        <span class="total">Percentage Score:</span> 
+          {{ ((category_earned_score / category_total_score) * 100) | round }}%
+      </h2>
+    </div>
+  </div>
+
+  <div style="clear:both">
+    <hr/>
+  </div>
+
+  <div #pnl class="col-md-12">
+    <div *ngFor="let tab of tabCategories; let i = index" id="{{ tab.id }}" class="panel panel-success my-panels">
+      <div class="panel-heading">
+        <h3 pTooltip="Click to collapse" life="1000" tooltipPosition="left" #el (click)="getEl(el)" class="panel-title  {{ i == 0 ? 'panel-collapsed' : '' }}">{{ tab.ismajoring == '1' ? 'Majoring - ' + tab.name: tab.name }}</h3>
+        <span class="pull-right">
+               <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            </span>
+      </div>
+
+      <div class="panel-body one-edge-shadow {{ i == 0 ? 'open-container' : 'close-container' }}">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:4%">#</th>
+              <th style="width:40%;">Question</th>
+              <th style="width:15%; text-align:center">Points</th>
+              <th style="width:10%; text-align:center">Remark</th>
+              <th style="width:35%; text-align:center">Answered</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="6">
+                <table *ngFor="let question of questions" class="table table-striped" style="margin-bottom:0">
+                  <tbody *ngIf="tab.name == question.category_majoring">
+                    <tr [@growSlowly]="" data-toggle="collapse" attr.data-target="#tbl{{question.id}}" class="accordion-toggle" pTooltip="Click to see answers" life="1000" tooltipPosition="left">
+                      <td style="width:4%">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                      </td>
+                      <td style="width:40%;">{{ question.name }}</td>
+                      <td class="question-pts-{{ tab.id }}" style="width:15%; text-align:center">{{ question.pts }}</td>
+                      <td style="width:10%; text-align:center">
+                        <i class="fa {{ question.iscorrect == question.my_answer ? 'fa-check': 'fa-times-circle' }}" aria-hidden="true"></i>
+                      </td>
+                      <td style="width:35%; text-align:center">
+                        {{ question.my_answer_txt == '' ? 'No Answer' : question.my_answer_txt }}
+                      </td>
+                    </tr>
+                    <!--- collapsing --->
+                    <tr class="hidden-row-container">
+                      <td colspan="6" class="hiddenRow">
+                        <div id="tbl{{ question.id }}" class="accordian-body collapse col-md-12">
+                          <div *ngFor="let answer of answers">
+                            <div *ngIf="question.id == answer.question_id" class="col-md-5" style="margin:5px;">
+                              <label class="label-option">
+                                                <i class="fa {{ answer.iscorrect == '1' ? 'fa-check-circle': 'fa-circle-o' }}" aria-hidden="true"></i>
+                                                {{ answer.name }}</label>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">
+                <span class="gray-font pull-right" style="font-size:18px;">Points: </span>
+              </td>
+              <td class="gray-font">
+                <span class="text-center" *ngFor="let score of categoryScore">
+                    <p *ngIf="score.category_majoring == tab.name" style="font-size:18px; padding-right:10px;">{{ score.total }}</p>
+                </span>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12" style="margin-bottom:20px; text-align: center">
+    <button id="btn-done" (click)="onTerminateExamSession()" class="btn btn-lg btn-default">
+         <i class="fa fa-hand-o-up" aria-hidden="true"></i> End Exam </button>
+  </div>
+  <div style="clear:both">
+    <hr/>
+  </div>
+</div>

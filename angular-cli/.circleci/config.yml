@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/angular-cli
+    docker:
+      - image: angular/ngcontainer
+      - image: node:8.4
+    steps:
+      - checkout
+      - restore_cache:
+          key: angular-cli-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - run: |
+          node --version
+          npm --version
+          npm install --quiet
+      - save_cache:
+          key: angular-cli-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - "node_modules"
+      - run: xvfb-run -a node tests/run_e2e.js --glob=tests/build/**
